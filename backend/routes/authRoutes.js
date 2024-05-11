@@ -1,10 +1,10 @@
 import expess from "express";
-import { loginUser, logoutUser, signupUser } from "../controllers/authController.js";
+import { login, logout, signup } from "../controllers/authController.js";
 
-const router = expess();
+const router = expess.Router();
 
-router.get("/signup" , signupUser );
-router.get("/login" , loginUser);
-router.get("/logout" , logoutUser);
+router.post("/signup" , signup );
+router.post("/login" , login);
+router.post("/logout" , logout);
 
 export default router;
