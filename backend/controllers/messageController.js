@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Conversation from "../models/conversation.js";
 import Message from "../models/message.js";
+import { getReceiverSocketId } from "../socket/socket.js";
 
 export const sendMessage = async (req, res) => {
     try {
@@ -30,9 +31,8 @@ export const sendMessage = async (req, res) => {
             conversation.messages.push(newMessage._id);
         }
 
-        //sockit io functionality -> Pending
-
-
+        
+        
         // Save the new message
         // await newMessage.save();
 
@@ -42,8 +42,12 @@ export const sendMessage = async (req, res) => {
 
         //this will run in parallel
         await Promise.all([conversation.save(), newMessage.save()]);
-
-
+        
+        //socket io functionality -> Pending
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if(receiverSocketId){
+            io.to(receiverSocketId).emit("newMessage", newMessage);
+        }
 
         res.status(201).json(newMessage);
     } catch (error) {
